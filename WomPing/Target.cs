@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
+using System.Threading;
 
 
 namespace WomPing
@@ -16,42 +17,58 @@ namespace WomPing
         private string hostname;
         private string ip;
         private int port;
+        private List<long> pingTimes;
+        private long mostRecentPing;
 
         public Target(string hostname, string ip, int port)
         {
+            pingTimes = new List<long>();
             this.average = 0;
             this.hostname = hostname;
             this.ip = ip;
             this.port = port;
+            mostRecentPing = 0;
         }
 
-        public void doPing()
+        public void doPing(Object stateinfo)
         {
-            Stopwatch stop = new Stopwatch();
-            SocketPermission permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
-            IPHostEntry host = Dns.GetHostEntry("54.201.56.143");
-            IPAddress addr = host.AddressList[0];
-            IPEndPoint endpoint = new IPEndPoint(addr, port);
-           
-
-            string message = "asdfadsfadsf";
-            byte[] msg = Encoding.Unicode.GetBytes(message);
-
-            for (int k = 0; k < 10; k++ )
+            try
             {
-                //NEED TO SET A DEFAULT TIMEOUT!!!!
+                Stopwatch stop = new Stopwatch();
+                SocketPermission permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
+                IPAddress addr = Dns.GetHostEntry("54.201.56.143").AddressList[0];
+                IPEndPoint endpoint = new IPEndPoint(addr, port);
                 Socket sock = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                sock.SendTimeout = 5000;
+                sock.ReceiveTimeout = 5000;
+
+                string message = "asdfadsfadsf";
+                byte[] msg = Encoding.Unicode.GetBytes(message);
+                byte[] recvbytes = new byte[1024];
+
                 sock.Connect(endpoint);
-                byte[] bytes = new byte[1024];
                 stop.Start();
                 int bytesSent = sock.Send(msg);
-                sock.Receive(bytes);
+                sock.Receive(recvbytes);
                 stop.Stop();
-                long something = stop.ElapsedMilliseconds;
-                stop.Reset();
-                Console.WriteLine("here now!");
                 sock.Close();
+
+                mostRecentPing = stop.ElapsedMilliseconds;
+                pingTimes.Add(mostRecentPing);
+                doAverages();
+                stop.Reset();
             }
+            catch (Exception e){}
+        }
+
+        private void doAverages()
+        {
+            double sum = 0;
+            for (int k = 0; k < pingTimes.Count; k++)
+            {
+                sum += pingTimes[k];
+            }
+            this.average = sum / pingTimes.Count;
         }
 
         public double getAverage()

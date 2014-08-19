@@ -8,24 +8,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace WomPing
 {
     public partial class WomPingForm : Form
     {
+        //http://msdn.microsoft.com/en-us/library/system.threading.threadpool%28v=vs.110%29.aspx
         private List<Target> targets;
         public WomPingForm()
         {
             InitializeComponent();
+
             targets = new List<Target>();
             readHostList();
-            Target test = new Target("LOL Game Server", "54.201.56.143", 443);
-            test.doPing();
+            startPingThreads();
+            
+            
+
+
+            //Target test = new Target("LOL Game Server", "54.201.56.143", 443);
+           //test.doPing();
         }
+
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
             
+        }
+
+
+        private void startPingThreads()
+        {
+            Target threadTarget;
+            for (int k = 0; k < targets.Count; k++)
+            {
+                threadTarget = targets[k];
+                //ThreadPool.QueueUserWorkItem(threadTarget.ThreadPoolCallback);
+                ThreadPool.QueueUserWorkItem(new WaitCallback(threadTarget.doPing));
+            }
+            Thread.Sleep(6000);
         }
 
         private void readHostList()
