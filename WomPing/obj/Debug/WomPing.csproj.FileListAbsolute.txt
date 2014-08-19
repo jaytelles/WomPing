@@ -1,0 +1,9 @@
+H:\womping\womping\WomPing\WomPing\bin\Debug\WomPing.exe.config
+H:\womping\womping\WomPing\WomPing\bin\Debug\WomPing.exe
+H:\womping\womping\WomPing\WomPing\bin\Debug\WomPing.pdb
+H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.csprojResolveAssemblyReference.cache
+H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.Properties.Resources.resources
+H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.csproj.GenerateResource.Cache
+H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.exe
+H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.pdb
+H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.WomPingForm.resources
