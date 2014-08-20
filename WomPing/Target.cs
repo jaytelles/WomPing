@@ -77,8 +77,6 @@ namespace WomPing
             this.average = sum / pingTimes.Count;
         }
 
-
-
         public double getAverage()
         {
             return average;

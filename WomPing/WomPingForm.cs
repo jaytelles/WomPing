@@ -17,6 +17,7 @@ namespace WomPing
         //http://msdn.microsoft.com/en-us/library/system.threading.threadpool%28v=vs.110%29.aspx
         private List<Target> targets;
         private bool paused;
+        private readonly int pingInterval = 2000;
         public womPingForm()
         {
             InitializeComponent();
@@ -89,9 +90,9 @@ namespace WomPing
 
         private void readHostList()
         {
-            if(System.IO.File.Exists("C:\\womping\\hosts.txt"))
+            if(System.IO.File.Exists("C:\\womping\\hosts.xml"))
             {
-                StreamReader reader = File.OpenText("C:\\womping\\hosts.txt");
+                StreamReader reader = File.OpenText("C:\\womping\\hosts.xml");
                 string line;
 
                 Target target;
@@ -128,7 +129,7 @@ namespace WomPing
             while (!this.paused)
             {
                 doWomPing();
-                Thread.Sleep(1000);
+                Thread.Sleep(pingInterval);
             }
         }
 
