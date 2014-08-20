@@ -12,25 +12,44 @@ using System.Threading;
 
 namespace WomPing
 {
-    public partial class WomPingForm : Form
+    public partial class womPingForm : Form
     {
         //http://msdn.microsoft.com/en-us/library/system.threading.threadpool%28v=vs.110%29.aspx
         private List<Target> targets;
-        public WomPingForm()
+        public womPingForm()
         {
             InitializeComponent();
 
             targets = new List<Target>();
             readHostList();
             startPingThreads();
-            
-            
+            doWomPing();
+
+
 
 
             //Target test = new Target("LOL Game Server", "54.201.56.143", 443);
            //test.doPing();
         }
 
+        public void doWomPing()
+        {
+            //while (true)
+            //{
+                startPingThreads();
+                for (int k = 0; k < targets.Count; k++)
+                {
+                    ListViewItem row = new ListViewItem(targets[k].getHostname());
+                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getIP()));
+                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getMostRecentPing().ToString()));
+                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getDelta().ToString()));
+                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getAverage().ToString()));
+                    this.pingTable.Items.Add(row);
+                }
+                
+                //Thread.Sleep(15000);
+            //}
+        }
 
 
         private void Form1_Load(object sender, EventArgs e)
@@ -48,7 +67,20 @@ namespace WomPing
                 //ThreadPool.QueueUserWorkItem(threadTarget.ThreadPoolCallback);
                 ThreadPool.QueueUserWorkItem(new WaitCallback(threadTarget.doPing));
             }
-            Thread.Sleep(6000);
+            Thread.Sleep(1000);
+
+            bool allDone = false;
+            while(!allDone)
+            {
+                allDone = true;
+                for(int k=0; k<targets.Count; k++)
+                {
+                    if(targets[k].getIsRunning())
+                    {
+                        allDone = false;
+                    }
+                }
+            }
         }
 
         private void readHostList()

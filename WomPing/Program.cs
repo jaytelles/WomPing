@@ -16,7 +16,7 @@ namespace WomPing
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new WomPingForm());
+            Application.Run(new womPingForm());
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace WomPing
 {
-    partial class WomPingForm
+    partial class womPingForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,6 +32,8 @@
             this.hostname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ipAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.delta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.average = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // pingTable
@@ -39,33 +41,47 @@
             this.pingTable.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hostname,
             this.ipAddress,
-            this.ping});
+            this.ping,
+            this.delta,
+            this.average});
             this.pingTable.Location = new System.Drawing.Point(-4, -1);
             this.pingTable.Name = "pingTable";
-            this.pingTable.Size = new System.Drawing.Size(388, 464);
+            this.pingTable.Size = new System.Drawing.Size(495, 565);
             this.pingTable.TabIndex = 0;
             this.pingTable.UseCompatibleStateImageBehavior = false;
+            this.pingTable.View = System.Windows.Forms.View.Details;
             // 
             // hostname
             // 
             this.hostname.Text = "Hostname";
+            this.hostname.Width = 120;
             // 
             // ipAddress
             // 
             this.ipAddress.Text = "IP Address";
+            this.ipAddress.Width = 90;
             // 
             // ping
             // 
-            this.ping.Text = "Ping";
+            this.ping.Text = "Ping(ms)";
             // 
-            // WomPingForm
+            // delta
+            // 
+            this.delta.Text = "Delta(ms)";
+            // 
+            // average
+            // 
+            this.average.Text = "Average(ms)";
+            this.average.Width = 90;
+            // 
+            // womPingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 462);
+            this.ClientSize = new System.Drawing.Size(484, 562);
             this.Controls.Add(this.pingTable);
             this.MaximizeBox = false;
-            this.Name = "WomPingForm";
+            this.Name = "womPingForm";
             this.Text = "WomPing";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
@@ -78,6 +94,8 @@
         private System.Windows.Forms.ColumnHeader hostname;
         private System.Windows.Forms.ColumnHeader ipAddress;
         private System.Windows.Forms.ColumnHeader ping;
+        private System.Windows.Forms.ColumnHeader delta;
+        private System.Windows.Forms.ColumnHeader average;
     }
 }
 

@@ -19,6 +19,8 @@ namespace WomPing
         private int port;
         private List<long> pingTimes;
         private long mostRecentPing;
+        private long lastPing;
+        private bool isRunning;
 
         public Target(string hostname, string ip, int port)
         {
@@ -32,6 +34,7 @@ namespace WomPing
 
         public void doPing(Object stateinfo)
         {
+            isRunning = true;
             try
             {
                 Stopwatch stop = new Stopwatch();
@@ -53,12 +56,14 @@ namespace WomPing
                 stop.Stop();
                 sock.Close();
 
+                lastPing = mostRecentPing;
                 mostRecentPing = stop.ElapsedMilliseconds;
                 pingTimes.Add(mostRecentPing);
                 doAverages();
                 stop.Reset();
             }
             catch (Exception e){}
+            isRunning = false;
         }
 
         private void doAverages()
@@ -86,5 +91,24 @@ namespace WomPing
             return ip;
         }
 
+        public bool getIsRunning()
+        {
+            return isRunning;
+        }
+
+        public long getMostRecentPing()
+        {
+            return mostRecentPing;
+        }
+
+        public long getLastPing()
+        {
+            return lastPing;
+        }
+
+        public long getDelta()
+        {
+            return mostRecentPing - lastPing;
+        }
     }
 }
