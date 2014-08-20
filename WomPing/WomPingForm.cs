@@ -16,39 +16,48 @@ namespace WomPing
     {
         //http://msdn.microsoft.com/en-us/library/system.threading.threadpool%28v=vs.110%29.aspx
         private List<Target> targets;
+        private bool paused;
         public womPingForm()
         {
             InitializeComponent();
-
             targets = new List<Target>();
+            paused = false;
+
             readHostList();
             startPingThreads();
             doWomPing();
 
-
-
-
             //Target test = new Target("LOL Game Server", "54.201.56.143", 443);
-           //test.doPing();
+            //test.doPing();
         }
 
         public void doWomPing()
         {
-            //while (true)
-            //{
-                startPingThreads();
-                for (int k = 0; k < targets.Count; k++)
+            startPingThreads();
+            try
+            {
+                BeginInvoke(new MethodInvoker(() => { this.pingTable.Items.Clear(); }));
+            } catch(Exception e)
+            {
+                this.pingTable.Items.Clear();
+            }
+
+            for (int k = 0; k < targets.Count; k++)
+            {
+                ListViewItem row = new ListViewItem(targets[k].getHostname());
+                row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getIP()));
+                row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getMostRecentPing().ToString()));
+                row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getDelta().ToString()));
+                row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getAverage().ToString()));
+                try
                 {
-                    ListViewItem row = new ListViewItem(targets[k].getHostname());
-                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getIP()));
-                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getMostRecentPing().ToString()));
-                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getDelta().ToString()));
-                    row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getAverage().ToString()));
+                    BeginInvoke(new MethodInvoker(() => { this.pingTable.Items.Add(row); this.pingTable.Refresh(); }));
+                } catch(Exception e)
+                {
                     this.pingTable.Items.Add(row);
-                }
-                
-                //Thread.Sleep(15000);
-            //}
+                    this.pingTable.Refresh();
+                }   
+            }
         }
 
 
@@ -56,7 +65,6 @@ namespace WomPing
         {
             
         }
-
 
         private void startPingThreads()
         {
@@ -110,6 +118,27 @@ namespace WomPing
                 readHostList();
             }
 
+        }
+
+        private void goButton_Click(object sender, EventArgs e)
+        {
+            Thread goThread = new Thread(new ThreadStart(startRecording));
+            goThread.Start();
+        }
+
+        public void startRecording()
+        {
+            this.paused = false;
+            while (!this.paused)
+            {
+                doWomPing();
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void pauseButton_Click(object sender, EventArgs e)
+        {
+            this.paused = true;
         }
     }
 }

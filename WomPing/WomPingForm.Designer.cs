@@ -34,6 +34,8 @@
             this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.delta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.average = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.goButton = new System.Windows.Forms.Button();
+            this.pauseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // pingTable
@@ -74,11 +76,33 @@
             this.average.Text = "Average(ms)";
             this.average.Width = 90;
             // 
+            // goButton
+            // 
+            this.goButton.Location = new System.Drawing.Point(12, 527);
+            this.goButton.Name = "goButton";
+            this.goButton.Size = new System.Drawing.Size(75, 23);
+            this.goButton.TabIndex = 1;
+            this.goButton.Text = "Go";
+            this.goButton.UseVisualStyleBackColor = true;
+            this.goButton.Click += new System.EventHandler(this.goButton_Click);
+            // 
+            // pauseButton
+            // 
+            this.pauseButton.Location = new System.Drawing.Point(397, 527);
+            this.pauseButton.Name = "pauseButton";
+            this.pauseButton.Size = new System.Drawing.Size(75, 23);
+            this.pauseButton.TabIndex = 2;
+            this.pauseButton.Text = "Pause";
+            this.pauseButton.UseVisualStyleBackColor = true;
+            this.pauseButton.Click += new System.EventHandler(this.pauseButton_Click);
+            // 
             // womPingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 562);
+            this.Controls.Add(this.pauseButton);
+            this.Controls.Add(this.goButton);
             this.Controls.Add(this.pingTable);
             this.MaximizeBox = false;
             this.Name = "womPingForm";
@@ -96,6 +120,8 @@
         private System.Windows.Forms.ColumnHeader ping;
         private System.Windows.Forms.ColumnHeader delta;
         private System.Windows.Forms.ColumnHeader average;
+        private System.Windows.Forms.Button goButton;
+        private System.Windows.Forms.Button pauseButton;
     }
 }
 
