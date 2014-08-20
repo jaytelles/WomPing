@@ -26,9 +26,6 @@ namespace WomPing
             readHostList();
             startPingThreads();
             doWomPing();
-
-            //Target test = new Target("LOL Game Server", "54.201.56.143", 443);
-            //test.doPing();
         }
 
         public void doWomPing()
@@ -37,7 +34,7 @@ namespace WomPing
             try
             {
                 BeginInvoke(new MethodInvoker(() => { this.pingTable.Items.Clear(); }));
-            } catch(Exception e)
+            } catch(Exception)
             {
                 this.pingTable.Items.Clear();
             }
@@ -52,14 +49,13 @@ namespace WomPing
                 try
                 {
                     BeginInvoke(new MethodInvoker(() => { this.pingTable.Items.Add(row); this.pingTable.Refresh(); }));
-                } catch(Exception e)
+                } catch(Exception)
                 {
                     this.pingTable.Items.Add(row);
                     this.pingTable.Refresh();
                 }   
             }
         }
-
 
         private void Form1_Load(object sender, EventArgs e)
         {

@@ -58,11 +58,12 @@ namespace WomPing
 
                 lastPing = mostRecentPing;
                 mostRecentPing = stop.ElapsedMilliseconds;
+                stop.Reset();
                 pingTimes.Add(mostRecentPing);
                 doAverages();
-                stop.Reset();
+                
             }
-            catch (Exception e){}
+            catch (Exception){}
             isRunning = false;
         }
 
@@ -75,6 +76,8 @@ namespace WomPing
             }
             this.average = sum / pingTimes.Count;
         }
+
+
 
         public double getAverage()
         {
