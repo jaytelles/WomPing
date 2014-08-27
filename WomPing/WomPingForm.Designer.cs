@@ -34,6 +34,7 @@
             this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.delta = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.average = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.standardDev = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.goButton = new System.Windows.Forms.Button();
             this.pauseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -45,7 +46,8 @@
             this.ipAddress,
             this.ping,
             this.delta,
-            this.average});
+            this.average,
+            this.standardDev});
             this.pingTable.Location = new System.Drawing.Point(-4, -1);
             this.pingTable.Name = "pingTable";
             this.pingTable.Size = new System.Drawing.Size(495, 565);
@@ -75,6 +77,10 @@
             // 
             this.average.Text = "Average(ms)";
             this.average.Width = 90;
+            // 
+            // standardDev
+            // 
+            this.standardDev.Text = "Standard Deviation(ms)";
             // 
             // goButton
             // 
@@ -107,7 +113,7 @@
             this.MaximizeBox = false;
             this.Name = "womPingForm";
             this.Text = "WomPing";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.womPingForm_FormClosing);
             this.ResumeLayout(false);
 
         }
@@ -122,6 +128,7 @@
         private System.Windows.Forms.ColumnHeader average;
         private System.Windows.Forms.Button goButton;
         private System.Windows.Forms.Button pauseButton;
+        private System.Windows.Forms.ColumnHeader standardDev;
     }
 }
 

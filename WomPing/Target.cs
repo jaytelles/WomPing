@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 using System.Diagnostics;
 using System.Threading;
-
 
 namespace WomPing
 {
     class Target
     {
         private double average;
+        private double standardDev;
         private string hostname;
         private string ip;
         private int port;
@@ -21,6 +22,8 @@ namespace WomPing
         private long mostRecentPing;
         private long lastPing;
         private bool isRunning;
+        private Socket sock;
+        private Stopwatch stop;
 
         public Target(string hostname, string ip, int port)
         {
@@ -32,18 +35,37 @@ namespace WomPing
             mostRecentPing = 0;
         }
 
+        public void doICMPPing()
+        {
+            Ping ping = new Ping();
+            PingOptions options = new PingOptions();
+            string data = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            int timeout = 120;
+            PingReply reply = ping.Send("8.8.8.8", timeout, buffer, options);
+            if (reply.Status == IPStatus.Success)
+            {
+                Console.WriteLine("Address: {0}", reply.Address.ToString());
+                Console.WriteLine("RoundTrip time: {0}", reply.RoundtripTime);
+                Console.WriteLine("Time to live: {0}", reply.Options.Ttl);
+                Console.WriteLine("Don't fragment: {0}", reply.Options.DontFragment);
+                Console.WriteLine("Buffer size: {0}", reply.Buffer.Length);
+            }
+            int a = 3;
+        }
+
         public void doPing(Object stateinfo)
         {
             isRunning = true;
             try
             {
-                Stopwatch stop = new Stopwatch();
-                SocketPermission permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
-                IPAddress addr = Dns.GetHostEntry("54.201.56.143").AddressList[0];
+                //SocketPermission permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
+                IPAddress addr = Dns.GetHostEntry(ip).AddressList[0];
                 IPEndPoint endpoint = new IPEndPoint(addr, port);
-                Socket sock = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                sock.SendTimeout = 5000;
-                sock.ReceiveTimeout = 5000;
+
+                stop = new Stopwatch();
+                sock = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                sock.ReceiveTimeout = 2000;
 
                 string message = "asdfadsfadsf";
                 byte[] msg = Encoding.Unicode.GetBytes(message);
@@ -54,32 +76,68 @@ namespace WomPing
                 int bytesSent = sock.Send(msg);
                 sock.Receive(recvbytes);
                 stop.Stop();
-                sock.Close();
-
-                lastPing = mostRecentPing;
-                mostRecentPing = stop.ElapsedMilliseconds;
-                stop.Reset();
-                pingTimes.Add(mostRecentPing);
-                doAverages();
-                
             }
-            catch (Exception){}
+            catch (SocketException except)
+            {
+                stop.Stop();
+                if (except.ErrorCode == 10038)
+                {
+                    lastPing = -1;
+                }
+            }
+            catch (Exception) 
+            {
+                stop.Stop();
+            }
+            sock.Close();
+            lastPing = mostRecentPing;
+            mostRecentPing = stop.ElapsedMilliseconds;
+            pingTimes.Add(mostRecentPing);
+            doMath();
+            stop.Reset();
             isRunning = false;
         }
 
-        private void doAverages()
+        public void endAttempt()
+        {
+            sock.Close();
+            //IAsyncResult res = new AsyncResult();
+            //sock.EndReceive();
+        }
+
+        private void doMath()
         {
             double sum = 0;
-            for (int k = 0; k < pingTimes.Count; k++)
+            int max = 100;
+            if (pingTimes.Count <= 100)
             {
-                sum += pingTimes[k];
+                max = pingTimes.Count;
             }
-            this.average = sum / pingTimes.Count;
+            List<long> subPings = pingTimes.GetRange(pingTimes.Count - max, max);
+
+            for (int k = 0; k < subPings.Count; k++)
+            {
+                sum += subPings[k];
+            }
+            average = sum / (double)max;
+
+            double acc = 0;
+            for(int k=0; k<max; k++)
+            {
+                acc += Math.Pow((subPings[k] - average), 2);
+            }
+
+            standardDev = Math.Sqrt(acc / max);
         }
 
         public double getAverage()
         {
             return average;
+        }
+
+        public double getStandardDev()
+        {
+            return standardDev;
         }
 
         public string getHostname()
