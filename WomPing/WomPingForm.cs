@@ -78,7 +78,7 @@ namespace WomPing
             }
             threadsComplete = true;
         }
-
+        
         private void createBeginningDisplay()
         {
             for (int k = 0; k < targets.Count; k++)
@@ -90,15 +90,6 @@ namespace WomPing
                 row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getAverage().ToString()));
                 row.SubItems.Add(new ListViewItem.ListViewSubItem(row, targets[k].getStandardDev().ToString()));
                 this.pingTable.Items.Add(row);
-                /*try
-                {
-                    BeginInvoke(new MethodInvoker(() => { this.pingTable.Items.Add(row); this.pingTable.Refresh(); }));
-                }
-                catch (Exception)
-                {
-                    
-                    this.pingTable.Refresh();
-                }*/
             }
         }
 
@@ -122,7 +113,7 @@ namespace WomPing
                 {
                     if(targets[k].getIsRunning() && stop.ElapsedMilliseconds > 2*pingInterval)
                     {
-                        targets[k].endAttempt();
+                        targets[k].closeSocket();
                     }
                     if(targets[k].getIsRunning())
                     {
@@ -191,8 +182,19 @@ namespace WomPing
         private void womPingForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.paused = true;
-            while (!threadsComplete) { Thread.Sleep(5); }
+            while (!threadsComplete) { Thread.Sleep(10); }
             Thread.Sleep(pingInterval + 500);
+        }
+
+        private void womPingForm_Resize(object sender, EventArgs e)
+        {
+            this.pingTable.Size = this.Size;
+            
+                //gotta fix button position
+
+
+
+            this.Refresh();
         }
     }
 }

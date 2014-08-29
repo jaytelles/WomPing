@@ -33,6 +33,7 @@ namespace WomPing
             this.ip = ip;
             this.port = port;
             mostRecentPing = 0;
+            stop = new Stopwatch();
         }
 
         public void doICMPPing()
@@ -59,13 +60,12 @@ namespace WomPing
             isRunning = true;
             try
             {
-                //SocketPermission permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
+                SocketPermission permission = new SocketPermission(NetworkAccess.Accept, TransportType.Tcp, "", SocketPermission.AllPorts);
                 IPAddress addr = Dns.GetHostEntry(ip).AddressList[0];
                 IPEndPoint endpoint = new IPEndPoint(addr, port);
-
-                stop = new Stopwatch();
                 sock = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 sock.ReceiveTimeout = 2000;
+                stop.Reset();
 
                 string message = "asdfadsfadsf";
                 byte[] msg = Encoding.Unicode.GetBytes(message);
@@ -85,11 +85,15 @@ namespace WomPing
                     lastPing = -1;
                 }
             }
-            catch (Exception) 
+            catch(NullReferenceException)
             {
                 stop.Stop();
             }
-            sock.Close();
+            catch (Exception)
+            {
+                stop.Stop();
+            }
+            closeSocket();
             lastPing = mostRecentPing;
             mostRecentPing = stop.ElapsedMilliseconds;
             pingTimes.Add(mostRecentPing);
@@ -98,11 +102,13 @@ namespace WomPing
             isRunning = false;
         }
 
-        public void endAttempt()
+        public void closeSocket()
         {
-            sock.Close();
-            //IAsyncResult res = new AsyncResult();
-            //sock.EndReceive();
+            try
+            {
+                sock.Close();
+            }
+            catch (NullReferenceException) { }
         }
 
         private void doMath()

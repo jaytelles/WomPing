@@ -7,3 +7,12 @@ H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.csproj.GenerateResource.Cac
 H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.exe
 H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.pdb
 H:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.WomPingForm.resources
+F:\womping\womping\WomPing\WomPing\bin\Debug\WomPing.exe.config
+F:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.exe
+F:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.pdb
+F:\womping\womping\WomPing\WomPing\bin\Debug\WomPing.exe
+F:\womping\womping\WomPing\WomPing\bin\Debug\WomPing.pdb
+F:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.csprojResolveAssemblyReference.cache
+F:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.womPingForm.resources
+F:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.Properties.Resources.resources
+F:\womping\womping\WomPing\WomPing\obj\Debug\WomPing.csproj.GenerateResource.Cache

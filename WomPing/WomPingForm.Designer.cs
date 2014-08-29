@@ -84,6 +84,7 @@
             // 
             // goButton
             // 
+            this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.goButton.Location = new System.Drawing.Point(12, 527);
             this.goButton.Name = "goButton";
             this.goButton.Size = new System.Drawing.Size(75, 23);
@@ -94,6 +95,7 @@
             // 
             // pauseButton
             // 
+            this.pauseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.pauseButton.Location = new System.Drawing.Point(397, 527);
             this.pauseButton.Name = "pauseButton";
             this.pauseButton.Size = new System.Drawing.Size(75, 23);
@@ -111,9 +113,11 @@
             this.Controls.Add(this.goButton);
             this.Controls.Add(this.pingTable);
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(300, 400);
             this.Name = "womPingForm";
             this.Text = "WomPing";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.womPingForm_FormClosing);
+            this.Resize += new System.EventHandler(this.womPingForm_Resize);
             this.ResumeLayout(false);
 
         }
